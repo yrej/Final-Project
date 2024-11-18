@@ -1,3 +1,3 @@
 # Final-Project
 
-Scripty všechny využité v mém godot projektu
+všechny využité scripty v mém godot projektu
