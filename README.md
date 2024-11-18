@@ -1,3 +1,3 @@
 # Final-Project
 
-první commit pro grussyho xD
+Scripty všechny využité v mém godot projektu
