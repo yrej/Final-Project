@@ -15,11 +15,11 @@ const mouse_sens = 0.005
 
 @onready var neck := $Neck
 @onready var camera := $Neck/Camera3D
-@onready var pause_menu = $Neck/Pause_Menu
-@onready var standing_collision = $standing_collision
-@onready var crouching_collision = $crouch_collision
-@onready var standing_ray_cast = $RayCast3D
-@onready var anim = $Neck/Camera3D/HUD
+@onready var pause_menu := $Neck/Pause_Menu
+@onready var death_menu := $Neck/Death_Menu
+@onready var standing_collision := $standing_collision
+@onready var crouching_collision := $crouch_collision
+@onready var standing_ray_cast := $RayCast3D
 
 @onready var Spell_slot: int = Global_Vars.Spell_slot
 
@@ -31,8 +31,11 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("pause"):
+	if Input.is_action_just_pressed("pause") and !Global_Vars.dead_b:
 		pauseMenu()
+
+func port(target: String) -> void:
+	SceneTransition.change_scene(target)
 
 func pauseMenu():
 	if paused:
@@ -46,7 +49,7 @@ func pauseMenu():
 
 func dead():
 	Global_Vars.dead_b = true
-	pause_menu.show()
+	death_menu.show()
 	Engine.time_scale = 0
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
@@ -67,12 +70,9 @@ func _input(event):
 
 func on_ice():
 	friction = 1
+
 func on_floor():
 	friction = 15
-func spawn():
-	anim.spawn()
-func port():
-	anim.port()
 	
 func got_hit(dmg: int):
 	Global_Vars.health = Global_Vars.health - dmg
@@ -105,7 +105,7 @@ func _physics_process(delta: float) -> void:
 			neck.position.y = lerp(neck.position.y,crouching_depth,delta*camera_speed)
 			standing_collision.disabled = true
 			crouching_collision.disabled = false
-			Global_Vars.stamina = Global_Vars.stamina - 1
+			Global_Vars.stamina = Global_Vars.stamina - 2
 		if Global_Vars.stamina < 1:
 			curent_speed = crouch_speed
 			neck.position.y = lerp(neck.position.y,crouching_depth,delta*camera_speed)
